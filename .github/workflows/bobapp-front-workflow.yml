@@ -67,3 +67,40 @@ jobs:
           path: test-results/*.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           reporter: java-junit
+          
+    
+  quality-frontend:
+    needs: test-frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: ${{ env.FRONTEND_PATH }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: ${{ env.CACHE_NPM }}
+          cache-dependency-path: ${{ env.CACHE_DEPENDENCY_PATH }}
+
+      - name: Install dependencies
+        working-directory: ${{ env.FRONTEND_PATH }}
+        run: npm install
+
+      - name: Run tests with coverage
+        working-directory: ${{ env.FRONTEND_PATH }}
+        run: npm run test:ci-coverage
+
+      - name: Sonar Quality Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        with:
+          projectBaseDir: ${{ env.FRONTEND_PATH }}
+          args: >
+            -Dsonar.organization=maximedrouault
+            -Dsonar.projectKey=maximedrouault_bobapp-front
+            -Dsonar.javascript.lcov.reportPaths=coverage/bobapp/lcov.info
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONT }}
