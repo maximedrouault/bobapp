@@ -56,7 +56,7 @@ jobs:
 
       - name: Run tests
         working-directory: ${{ env.FRONTEND_PATH }}
-        run: npm run test -- --watch=false --browsers=ChromeHeadless --code-coverage
+        run: npm run test:ci
 
       - name: Publish tests report
         uses: dorny/test-reporter@v2
