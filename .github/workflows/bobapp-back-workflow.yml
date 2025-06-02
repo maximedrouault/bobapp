@@ -86,3 +86,30 @@ jobs:
             -Dsonar.projectKey=maximedrouault_bobapp-back
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACK }}
+
+
+  docker:
+    needs: quality-backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: ${{ env.BACKEND_PATH }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN_BACK }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.BACKEND_PATH }}
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/bobapp-back:latest
