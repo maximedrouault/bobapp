@@ -102,3 +102,30 @@ jobs:
             -Dproject.settings=${{ env.FRONTEND_PATH }}/sonar-project.properties
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONT }}
+
+
+  docker-frontend:
+    needs: quality-frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: ${{ env.FRONTEND_PATH }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN_FRONT }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.FRONTEND_PATH }}
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/bobapp-front:latest
