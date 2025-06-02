@@ -99,8 +99,6 @@ jobs:
         with:
           projectBaseDir: ${{ env.FRONTEND_PATH }}
           args: >
-            -Dsonar.organization=maximedrouault
-            -Dsonar.projectKey=maximedrouault_bobapp-front
-            -Dsonar.javascript.lcov.reportPaths=coverage/bobapp/lcov.info
+            -Dproject.settings=${{ env.FRONTEND_PATH }}/sonar-project.properties
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONT }}
