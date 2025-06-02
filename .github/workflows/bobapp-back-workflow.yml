@@ -78,15 +78,11 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: ${{ env.CACHE_MAVEN }}
 
-      - name: Run tests with Maven
-        working-directory: ${{ env.BACKEND_PATH }}
-        run: mvn -B clean verify
-
       - name: Sonar Quality Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        with:
-          projectBaseDir: ${{ env.BACKEND_PATH }}
-          args: >
-            -Dproject.settings=${{ env.BACKEND_PATH }}/sonar-project.properties
+        working-directory: ${{ env.BACKEND_PATH }}
+        run: |
+          mvn -B clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.organization=maximedrouault \
+            -Dsonar.projectKey=maximedrouault_bobapp-back
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACK }}
