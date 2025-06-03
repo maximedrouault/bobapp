@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
   public joke$: Observable<Joke | null> = this.jokesService.joke$();
 
   constructor(private jokesService: JokesService) {
+    console.log('AppComponent initialized');
   }
 
   public ngOnInit(): void {
@@ -21,9 +22,5 @@ export class AppComponent implements OnInit {
 
   public getRandomJoke(): void {
     this.jokesService.getRandomJoke();
-  }
-
-  private unusedMethod(): void {
-    // This method is intentionally left empty to check Sonar Quality Gate.
   }
 }

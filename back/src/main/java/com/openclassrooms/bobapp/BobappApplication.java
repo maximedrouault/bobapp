@@ -8,9 +8,7 @@ public class BobappApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BobappApplication.class, args);
-	}
 
-	private void unusedMethod() {
-		// This method is intentionally left empty to check Sonar Quality Gate.
+		System.out.println("Bob's application is running! 🚀");
 	}
 }
