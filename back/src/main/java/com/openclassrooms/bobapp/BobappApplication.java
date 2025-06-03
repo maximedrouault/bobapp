@@ -8,7 +8,5 @@ public class BobappApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BobappApplication.class, args);
-
-		System.out.println("Bob's application is running! 🚀");
 	}
 }
