@@ -1,6 +1,11 @@
 name: BobApp-Frontend CI/CD pipeline
 
-on: [push, pull_request]
+on:
+  push:
+      branches:
+      - main
+  pull_request:
+      types: [opened, synchronize, reopened]
 
 env:
   FRONTEND_PATH: 'front'
