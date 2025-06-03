@@ -22,4 +22,8 @@ export class AppComponent implements OnInit {
   public getRandomJoke(): void {
     this.jokesService.getRandomJoke();
   }
+
+  private unusedMethod(): void {
+    // This method is intentionally left empty to check Sonar Quality Gate.
+  }
 }

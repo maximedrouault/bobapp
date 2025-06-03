@@ -10,4 +10,7 @@ public class BobappApplication {
 		SpringApplication.run(BobappApplication.class, args);
 	}
 
+	private void unusedMethod() {
+		// This method is intentionally left empty to check Sonar Quality Gate.
+	}
 }
