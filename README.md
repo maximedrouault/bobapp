@@ -1,57 +1,131 @@
-# BobApp
+# BobApp – CI/CD Automation Project
 
-Clone project:
+Welcome to the BobApp project, a full-stack application designed to demonstrate a modern CI/CD pipeline and DevOps best practices.
 
-> git clone XXXXX
+## 🚀 Overview
 
-## Front-end 
+BobApp is an application composed of a Java Spring Boot backend and an Angular frontend.
+This project implements a complete CI/CD pipeline:
 
-Go inside folder the front folder:
+- Automatic execution of tests and code quality analysis on each push and pull request
+- Generation and publication of Docker images to Docker Hub
+- Measurement and tracking of code coverage and Quality Gates
 
-> cd front
+## 🛠️ Implemented CI/CD Workflows
 
-Install dependencies:
+The project contains **two separate CI/CD pipelines** (one for the backend, one for the frontend), each triggered on every push or pull request. Both pipelines follow the same strict sequence of steps:
 
-> npm install
+- **Build** the project (compilation for the backend, bundling for the frontend)
+- **Run automated tests** and **publish test results** in GitHub Actions
+- **Generate code coverage reports** (Jacoco for backend, Angular coverage for frontend)
+- **Analyze code quality** using SonarCloud (consumes coverage reports)
+- **Build a Docker image**
+- **Push the Docker image to Docker Hub**
 
-Launch Front-end:
+Each step will only execute if the previous step was successful.
+The Docker image is only pushed to Docker Hub if all prior steps (build, tests, test results, coverage, quality analysis) have completed successfully.
 
-> npm run start;
+Backend and frontend pipelines run in parallel but are fully independent.
 
-### Docker
+## 📈 KPIs and Quality Gates
 
-Build the container:
+This project uses the **default "SonarWay" Quality Gate** from SonarCloud, which enforces:
 
-> docker build -t bobapp-front .  
+- **No new blocker issues, bugs, or vulnerabilities** on new code
+- **Coverage on new code** ≥ 80%
+- **Duplication on new code** < 3%
+- **No unreviewed Security Hotspots**
 
-Start the container:
+*(Global values are available on SonarCloud: for example, backend coverage: 38.8%, frontend: 83.3%)*
 
-> docker run -p 8080:8080 --name bobapp-front -d bobapp-front
+## ✅ Prerequisites
 
-## Back-end
+- **Java 11** (required for backend)
+- **Maven 3.6+** (for backend build and tests)
+- **Node.js 16+** (required for frontend)
+- **npm 8+** (for frontend dependencies and scripts)
+- **Docker** (for building and running containers; optional if you use only local setup)
 
-Go inside folder the back folder:
+## 📝 How to Use This Repository
 
-> cd back
+1. **Clone the project**
 
-Install dependencies:
+   ```bash
+   git clone https://github.com/maximedrouault/bobapp.git
+   cd bobapp
+   ```
 
-> mvn clean install
+2. **CI/CD workflows are triggered automatically on each push or PR**
 
-Launch Back-end:
+    - Access results on the [Actions](https://github.com/maximedrouault/bobapp/actions) tab of the repository
 
->  mvn spring-boot:run
+3. **Check the generated Docker images**
 
-Launch the tests:
+    - [bobapp-back on Docker Hub](https://hub.docker.com/r/maximedrouault/bobapp-back)
+    - [bobapp-front on Docker Hub](https://hub.docker.com/r/maximedrouault/bobapp-front)
 
-> mvn clean install
+4. **Check code quality and coverage**
 
-### Docker
+    - [SonarCloud Backend Dashboard](https://sonarcloud.io/project/overview?id=maximedrouault_bobapp-back)
+    - [SonarCloud Frontend Dashboard](https://sonarcloud.io/project/overview?id=maximedrouault_bobapp-front)
 
-Build the container:
+## 📂 Repository Structure
 
-> docker build -t bobapp-back .  
+- `/back`: Spring Boot backend
+- `/front`: Angular frontend
 
-Start the container:
+## ⚙️ Manual Setup & Usage
 
-> docker run -p 8080:8080 --name bobapp-back -d bobapp-back
+### Frontend
+
+1. Go to the frontend folder:
+   ```bash
+   cd front
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the frontend app:
+   ```bash
+   npm run start
+   ```
+4. To build and run the Docker container:
+   ```bash
+   docker build -t bobapp-front .
+   docker run -p 8080:8080 --name bobapp-front -d bobapp-front
+   ```
+
+#### Alternatively, you can run the latest Docker image from Docker Hub without building it locally:
+   ```bash
+   docker run -p 8080:8080 --name bobapp-front -d maximedrouault/bobapp-front:latest
+   ```
+
+### Backend
+
+1. Go to the backend folder:
+   ```bash
+   cd back
+   ```
+2. Install dependencies:
+   ```bash
+   mvn clean install
+   ```
+3. Start the backend app:
+   ```bash
+   mvn spring-boot:run
+   ```
+4. Run the tests:
+   ```bash
+   mvn clean verify
+   ```
+5. To build and run the Docker container:
+   ```bash
+   docker build -t bobapp-back .
+   docker run -p 8080:8080 --name bobapp-back -d bobapp-back
+   ```
+
+#### Alternatively, you can run the latest Docker image from Docker Hub without building it locally:
+   ```bash
+   docker run -p 8080:8080 --name bobapp-back -d maximedrouault/bobapp-back:latest
+   ```
